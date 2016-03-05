@@ -1262,6 +1262,7 @@ DISSECTOR_SRC = \
 	packet-tftp.c		\
 	packet-thrift.c		\
 	packet-time.c		\
+	packet-tina.c		\
 	packet-tipc.c		\
 	packet-tivoconnect.c	\
 	packet-tn3270.c		\
