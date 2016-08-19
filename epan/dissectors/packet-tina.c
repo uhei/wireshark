@@ -2,8 +2,6 @@
  * Routines for Barracuda TINA VPN Protocol
  * Copyright 2013, Uli Heilmeier <uh@heilmeier.eu>
  *
- * $Id$
- *
  * Wireshark - Network traffic analyzer
  * By Gerald Combs <gerald@wireshark.org>
  * Copyright 1998 Gerald Combs
@@ -62,10 +60,10 @@ static const value_string tina_message_types_vals[] = {
     { 0x05, "Init 5" },
     { 0x06, "Init 6" },
     { 0x11, "Enrypted Data" },
-    { 0x13, "Unknown 19" },
-    { 0x14, "Unknown 20" },
-    { 0x15, "Unknown 21" },
-    { 0x16, "Unknown 22" },
+    { 0x13, "RekeyX Request" },
+    { 0x14, "RekeyX Response" },
+    { 0x15, "RekeyConfirm Request" },
+    { 0x16, "RekeyConfirm Reply" },
     { 0x17, "Terminate" },
     { 0x21, "Keep-Alive Request" },
     { 0x22, "Keep-Alive Response" },
@@ -109,17 +107,17 @@ dissect_tina(tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree, void *data _U_
     offset++;
 
     if ( tina_type < 10 || tina_type == 19 || tina_type == 20 ) {
-        proto_tree_add_item(tina_tree, hf_tina_init1, tvb, offset, 16, ENC_BIG_ENDIAN);
+        proto_tree_add_item(tina_tree, hf_tina_init1, tvb, offset, 16, ENC_NA);
         offset+=16;
-        proto_tree_add_item(tina_tree, hf_tina_init6, tvb, offset, 3, ENC_BIG_ENDIAN);
+        proto_tree_add_item(tina_tree, hf_tina_init6, tvb, offset, 3, ENC_NA);
         offset+=3;
-        proto_tree_add_item(tina_tree, hf_tina_init5, tvb, offset, 2, ENC_BIG_ENDIAN);
+        proto_tree_add_item(tina_tree, hf_tina_init5, tvb, offset, 2, ENC_NA);
         offset+=2;
-        proto_tree_add_item(tina_tree, hf_tina_remoteid, tvb, offset, 32, ENC_BIG_ENDIAN);
+        proto_tree_add_item(tina_tree, hf_tina_remoteid, tvb, offset, 32, ENC_ASCII|ENC_NA);
         offset+=32;
-        proto_tree_add_item(tina_tree, hf_tina_init3, tvb, offset, 1, ENC_BIG_ENDIAN);
+        proto_tree_add_item(tina_tree, hf_tina_init3, tvb, offset, 1, ENC_NA);
         offset+=1;
-        proto_tree_add_item(tina_tree, hf_tina_localid, tvb, offset, 32, ENC_BIG_ENDIAN);
+        proto_tree_add_item(tina_tree, hf_tina_localid, tvb, offset, 32, ENC_ASCII|ENC_NA);
         offset+=32;
     }
     else if ( tina_type >= 10 ) {
@@ -128,28 +126,28 @@ dissect_tina(tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree, void *data _U_
         proto_tree_add_item(tina_tree, hf_tina_seq, tvb, offset, 4, ENC_BIG_ENDIAN);
         offset+=4;
         if ( tina_type == 33) {
-            proto_tree_add_item(tina_tree, hf_tina_keep1, tvb, offset, 16, ENC_BIG_ENDIAN);
+            proto_tree_add_item(tina_tree, hf_tina_keep1, tvb, offset, 16, ENC_NA);
             offset+=16;
-            proto_tree_add_item(tina_tree, hf_tina_keep2, tvb, offset, 32, ENC_BIG_ENDIAN);
+            proto_tree_add_item(tina_tree, hf_tina_keep2, tvb, offset, 32, ENC_NA);
             offset+=32;
-            proto_tree_add_item(tina_tree, hf_tina_keep4, tvb, offset, 16, ENC_BIG_ENDIAN);
+            proto_tree_add_item(tina_tree, hf_tina_keep4, tvb, offset, 16, ENC_NA);
             offset+=16;
-            proto_tree_add_item(tina_tree, hf_tina_keep3, tvb, offset, 12, ENC_BIG_ENDIAN);
+            proto_tree_add_item(tina_tree, hf_tina_keep3, tvb, offset, 12, ENC_NA);
             offset+=12;
             return offset;
         }
         else if ( tina_type == 34) {
-            proto_tree_add_item(tina_tree, hf_tina_keep1, tvb, offset, 16, ENC_BIG_ENDIAN);
+            proto_tree_add_item(tina_tree, hf_tina_keep1, tvb, offset, 16, ENC_NA);
             offset+=16;
-            proto_tree_add_item(tina_tree, hf_tina_keep2, tvb, offset, 32, ENC_BIG_ENDIAN);
+            proto_tree_add_item(tina_tree, hf_tina_keep2, tvb, offset, 32, ENC_NA);
             offset+=32;
-            proto_tree_add_item(tina_tree, hf_tina_keep4, tvb, offset, 32, ENC_BIG_ENDIAN);
+            proto_tree_add_item(tina_tree, hf_tina_keep4, tvb, offset, 32, ENC_NA);
             offset+=32;
-            proto_tree_add_item(tina_tree, hf_tina_keep3, tvb, offset, 12, ENC_BIG_ENDIAN);
-            proto_tree_add_item(tina_tree, hf_tina_keep3a, tvb, offset, 3, ENC_BIG_ENDIAN);
-            proto_tree_add_item(tina_tree, hf_tina_keep3b, tvb, offset+3, 2, ENC_BIG_ENDIAN);
-            proto_tree_add_item(tina_tree, hf_tina_keep3c, tvb, offset+5, 6, ENC_BIG_ENDIAN);
-            proto_tree_add_item(tina_tree, hf_tina_keep3d, tvb, offset+11, 1, ENC_BIG_ENDIAN);
+            proto_tree_add_item(tina_tree, hf_tina_keep3, tvb, offset, 12, ENC_NA);
+            proto_tree_add_item(tina_tree, hf_tina_keep3a, tvb, offset, 3, ENC_NA);
+            proto_tree_add_item(tina_tree, hf_tina_keep3b, tvb, offset+3, 2, ENC_NA);
+            proto_tree_add_item(tina_tree, hf_tina_keep3c, tvb, offset+5, 6, ENC_NA);
+            proto_tree_add_item(tina_tree, hf_tina_keep3d, tvb, offset+11, 1, ENC_NA);
             offset+=12;
             return offset;
         }
