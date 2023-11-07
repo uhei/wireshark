@@ -32,6 +32,7 @@
 #include "ui/all_files_wildcard.h"
 
 #include <QCheckBox>
+#include <QDir>
 #include <QFileInfo>
 #include <QGridLayout>
 #include <QHBoxLayout>
@@ -83,6 +84,8 @@ CaptureFileDialog::CaptureFileDialog(QWidget *parent, capture_file *cf) :
         if (prefs.gui_fileopen_dir[0] != '\0')
             setDirectory(prefs.gui_fileopen_dir);
         break;
+    default:
+        setDirectory(QDir::homePath());
     }
 
 #if !defined(Q_OS_WIN)
