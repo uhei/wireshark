@@ -180,6 +180,7 @@ if [ $INSTALL_LOGRAY -ne 0 ] ; then
         mv "libs-$FALCO_LIBS_VERSION" "falco-libs-$FALCO_LIBS_VERSION"
         cd "falco-libs-$FALCO_LIBS_VERSION"
         patch -p1 < "../tools/macos-setup-patches/falco-uthash_h-install.patch"
+        patch -p1 < "../tools/macos-setup-patches/falco-include-dirs.patch"
         mkdir build_dir
         cd build_dir
         cmake -DBUILD_SHARED_LIBS=ON -DMINIMAL_BUILD=ON -DCREATE_TEST_TARGETS=OFF \
